@@ -127,25 +127,25 @@ class MainPage(Handler):
         password = self.request.get('password')
         if not password:
             params['error_password'] = '請輸入身份證字號!'
+        login = None    
         try:
             login = validAccount(username,password)
         except httplib.HTTPException:
             have_error = True
-            params['login_error'] = '登入失敗!請檢查帳號密碼後重新登入'
-        else:
-            if login:
-                user = Users.by_name(username)
-                if user:
-                    self.redirect('/Thankyou')
-                else:
-                    hashed = hashed_cookie(str(username))
-                    self.response.headers['Content-Type'] = 'text/plain'
-                    self.response.headers.add_header('Set-Cookie','user_id=%s; Path=/' %hashed)
-                    self.redirect("/vote")
+            params['error_login'] = '登入失敗!請檢查帳號密碼後重新登入'
+        if login:
+            user = Users.by_name(username)
+            if user:
+                self.redirect('/Thankyou')
             else:
-                have_error = True
-                params['login_error'] = '登入失敗!請檢查帳號密碼後重新登入'
-        if have_error == True:
+                hashed = hashed_cookie(str(username))
+                self.response.headers['Content-Type'] = 'text/plain'
+                self.response.headers.add_header('Set-Cookie','user_id=%s; Path=/' %hashed)
+                self.redirect("/vote")
+        else:
+            have_error = True
+            params['error_login'] = '登入失敗!請檢查帳號密碼後重新登入'
+        if have_error:
             self.render("temp.html", **params)
 
 class VotePage(Handler):
