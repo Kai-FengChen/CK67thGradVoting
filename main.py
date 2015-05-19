@@ -119,7 +119,7 @@ class MainPage(Handler):
         params = dict(username = username)
         if not username:
             have_error = True
-            params['error_user'] = '請填入夢駝林帳號!'
+            params['error_user'] = '請輸入夢駝林帳號!'
         elif not valid_username(username):
             have_error = True
             params.pop("username",None)
