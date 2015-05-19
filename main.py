@@ -106,9 +106,9 @@ def valid_hashed(hashed):
 USER_RE = re.compile(r"^ck(100|101)\d{4}")
 def valid_username(username):
     return USER_RE.match(username)
-PASSWORD_RE = re.compile(r"^\d{8}")
-def valid_password(password):
-    return PASSWORD_RE.match(password)
+#PASSWORD_RE = re.compile(r"^\d{8}")
+#def valid_password(password):
+#    return PASSWORD_RE.match(password)
 class MainPage(Handler):
     def get(self):
         self.response.headers.add_header('Set-Cookie','user_id=; Path=/')
