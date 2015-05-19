@@ -134,14 +134,17 @@ class MainPage(Handler):
             have_error = True
             params['error_login'] = '登入失敗!請檢查帳號密碼後重新登入'
         if login:
-            user = Users.by_name(username)
-            if user:
-                self.redirect('/Thankyou')
+            if valid_username(username):
+                user = Users.by_name(username)
+                if user:
+                    self.redirect('/Thankyou')
+                else:
+                    hashed = hashed_cookie(str(username))
+                    self.response.headers['Content-Type'] = 'text/plain'
+                    self.response.headers.add_header('Set-Cookie','user_id=%s; Path=/' %hashed)
+                    self.redirect("/vote")
             else:
-                hashed = hashed_cookie(str(username))
-                self.response.headers['Content-Type'] = 'text/plain'
-                self.response.headers.add_header('Set-Cookie','user_id=%s; Path=/' %hashed)
-                self.redirect("/vote")
+                have_error = True
         else:
             have_error = True
             params['error_login'] = '登入失敗!請檢查帳號密碼後重新登入'
